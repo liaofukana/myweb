@@ -1,0 +1,1484 @@
+<html lang="zh-CN"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>苏威 | 建筑学学生作品集</title>
+    <!-- 引入Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- 引入Google字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet">
+    
+    <!-- 配置Tailwind -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#704214', // 深棕色，更具专业感
+                        secondary: '#D2B48C', // 棕褐色，作为辅助色
+                        accent: '#354F52', // 深石板灰，用于强调
+                        light: '#F8F5F0', // 米白色，作为背景
+                        dark: '#2D2A32'  // 深灰色，用于文本
+                    },
+                    fontFamily: {
+                        playfair: ['"Playfair Display"', 'serif'],
+                        inter: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .text-shadow {
+                text-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            }
+            .transition-custom {
+                transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            }
+            .card-hover {
+                transform: translateY(-8px);
+                box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            }
+        }
+    </style>
+    
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            background-color: #F8F5F0;
+            color: #2D2A32;
+        }
+        
+        .project-card {
+            overflow: hidden;
+            position: relative;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+        }
+        
+        .project-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(53, 79, 82, 0.9);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 1.5rem;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .project-card:hover .project-overlay {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .project-card img {
+            transition: transform 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .project-card:hover img {
+            transform: scale(1.08);
+        }
+        
+        .nav-scrolled {
+            background-color: rgba(248, 245, 240, 0.98);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            padding-top: 0.75rem;
+            padding-bottom: 0.75rem;
+        }
+        
+        /* 建筑图纸风格的分隔线 */
+        .architectural-divider {
+            height: 1px;
+            background-image: linear-gradient(90deg, transparent, #704214, transparent);
+            position: relative;
+        }
+        
+        .architectural-divider::after {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #704214;
+            border-radius: 50%;
+            top: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        /* 设计过程时间线 */
+        .timeline-line {
+            position: absolute;
+            left: 24px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background-color: #D2B48C;
+        }
+        
+        /* 加载动画 */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .animate-fade-in-up {
+            animation: fadeInUp 0.8s ease forwards;
+        }
+        
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-300 { animation-delay: 0.3s; }
+        .delay-400 { animation-delay: 0.4s; }
+        .delay-500 { animation-delay: 0.5s; }
+        
+        /* 技能条动画 */
+        @keyframes progress {
+            from { width: 0; }
+            to { width: var(--width); }
+        }
+        
+        .skill-animate {
+            animation: progress 1.2s ease-out forwards;
+        }
+        
+        /* 图片放大模态框 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 90%;
+        }
+        
+        .modal-image {
+            max-width: 100%;
+            max-height: 85vh;
+            object-contain;
+            border: 4px solid white;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            color: white;
+            font-size: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .close-modal:hover {
+            transform: scale(1.2);
+        }
+        
+        .modal-caption {
+            color: white;
+            text-align: center;
+            margin-top: 15px;
+            font-size: 1.2rem;
+        }
+        
+        /* Logo样式 */
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+        }
+        
+        .logo-su {
+            font-size: 2.5rem;
+            color: #704214;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .logo-wei {
+            font-size: 2.5rem;
+            color: #704214;
+            position: relative;
+            margin-left: -0.5rem;
+            z-index: 1;
+        }
+        
+        .logo-architecture {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 2px;
+            background-color: #704214;
+            z-index: 0;
+        }
+        
+        .logo-corner {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            border: 2px solid #704214;
+            z-index: 0;
+        }
+        
+        .logo-corner-tl {
+            top: -6px;
+            left: -6px;
+            border-right: none;
+            border-bottom: none;
+        }
+        
+        .logo-corner-tr {
+            top: -6px;
+            right: -6px;
+            border-left: none;
+            border-bottom: none;
+        }
+        
+        .logo-corner-bl {
+            bottom: -6px;
+            left: -6px;
+            border-right: none;
+            border-top: none;
+        }
+        
+        .logo-corner-br {
+            bottom: -6px;
+            right: -6px;
+            border-left: none;
+            border-top: none;
+        }
+        
+        /* 文件架样式 */
+        .file-cabinet {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            z-index: 2000;
+            padding: 40px;
+            overflow-y: auto;
+        }
+        
+        .file-cabinet.active {
+            display: block;
+            animation: fadeIn 0.5s ease forwards;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .file-cabinet-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .file-cabinet-title {
+            color: white;
+            font-size: 1.8rem;
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .close-cabinet {
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .close-cabinet:hover {
+            transform: rotate(90deg);
+        }
+        
+        .file-folders {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 25px;
+        }
+        
+        .folder {
+            background-color: #3a220a;
+            border-radius: 5px;
+            padding: 20px;
+            color: white;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            min-height: 180px;
+        }
+        
+        .folder:hover {
+            transform: translateY(-5px);
+            background-color: #5c360f;
+        }
+        
+        .folder-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #D2B48C;
+        }
+        
+        .folder-name {
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+        
+        .folder-count {
+            font-size: 0.9rem;
+            color: #D2B48C;
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+        }
+        
+        .folder-content {
+            display: none;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px dashed rgba(255, 255, 255, 0.1);
+        }
+        
+        .folder-file {
+            display: flex;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.95rem;
+        }
+        
+        .folder-file i {
+            margin-right: 10px;
+            color: #D2B48C;
+        }
+        
+        .back-to-folders {
+            display: inline-block;
+            margin-top: 20px;
+            color: #D2B48C;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        
+        .back-to-folders i {
+            margin-right: 5px;
+        }
+    </style>
+</head>
+
+<body class="font-inter">
+    <!-- 文件架 -->
+    <div id="file-cabinet" class="file-cabinet">
+        <div class="file-cabinet-header">
+            <h2 class="file-cabinet-title">设计文件架</h2>
+            <span id="close-cabinet" class="close-cabinet"><i class="fa fa-times"></i></span>
+        </div>
+        
+        <div class="file-folders" id="folders-container">
+            <!-- 设计项目文件夹 -->
+            <div class="folder" data-folder="design-projects">
+                <div class="folder-icon"><i class="fa fa-folder-open"></i></div>
+                <div class="folder-name">设计项目</div>
+                <p class="text-sm text-gray-300">课程设计与竞赛作品</p>
+                <div class="folder-count">6 个文件</div>
+                
+                <div class="folder-content">
+                    <div class="folder-file"><i class="fa fa-file-pdf-o"></i> 乡村文化中心设计.pdf</div>
+                    <div class="folder-file"><i class="fa fa-file-pdf-o"></i> 山地住宅设计方案.pdf</div>
+                    <div class="folder-file"><i class="fa fa-file-pdf-o"></i> 社区图书馆设计说明.pdf</div>
+                    <div class="folder-file"><i class="fa fa-file-pdf-o"></i> 旧工业区改造规划.pdf</div>
+                    <div class="folder-file"><i class="fa fa-file-pdf-o"></i> 民俗博物馆设计方案.pdf</div>
+                    <div class="folder-file"><i class="fa fa-file-pdf-o"></i> 城市口袋公园设计.pdf</div>
+                    <div class="back-to-folders"><i class="fa fa-arrow-left"></i> 返回文件夹</div>
+                </div>
+            </div>
+            
+            <!-- 手绘作品集 -->
+            <div class="folder" data-folder="sketches">
+                <div class="folder-icon"><i class="fa fa-folder-open"></i></div>
+                <div class="folder-name">手绘作品</div>
+                <p class="text-sm text-gray-300">设计草图与表现图</p>
+                <div class="folder-count">12 个文件</div>
+                
+                <div class="folder-content">
+                    <div class="folder-file"><i class="fa fa-file-image-o"></i> 概念草图集合.jpg</div>
+                    <div class="folder-file"><i class="fa fa-file-image-o"></i> 透视表现图合集.jpg</div>
+                    <div class="folder-file"><i class="fa fa-file-image-o"></i> 场地分析手绘.jpg</div>
+                    <div class="folder-file"><i class="fa fa-file-image-o"></i> 建筑细节手绘.jpg</div>
+                    <div class="back-to-folders"><i class="fa fa-arrow-left"></i> 返回文件夹</div>
+                </div>
+            </div>
+            
+            <!-- 模型照片 -->
+            <div class="folder" data-folder="models">
+                <div class="folder-icon"><i class="fa fa-folder-open"></i></div>
+                <div class="folder-name">模型照片</div>
+                <p class="text-sm text-gray-300">实体模型与数字模型</p>
+                <div class="folder-count">8 个文件</div>
+                
+                <div class="folder-content">
+                    <div class="folder-file"><i class="fa fa-file-image-o"></i> 乡村文化中心模型.jpg</div>
+                    <div class="folder-file"><i class="fa fa-file-image-o"></i> 山地住宅实体模型.jpg</div>
+                    <div class="folder-file"><i class="fa fa-file-image-o"></i> 社区图书馆数字模型.png</div>
+                    <div class="folder-file"><i class="fa fa-file-image-o"></i> 模型制作过程.jpg</div>
+                    <div class="back-to-folders"><i class="fa fa-arrow-left"></i> 返回文件夹</div>
+                </div>
+            </div>
+            
+            <!-- 实习报告 -->
+            <div class="folder" data-folder="internships">
+                <div class="folder-icon"><i class="fa fa-folder-open"></i></div>
+                <div class="folder-name">实习报告</div>
+                <p class="text-sm text-gray-300">工作经历与项目参与</p>
+                <div class="folder-count">3 个文件</div>
+                
+                <div class="folder-content">
+                    <div class="folder-file"><i class="fa fa-file-word-o"></i> 华筑建筑设计事务所实习报告.docx</div>
+                    <div class="folder-file"><i class="fa fa-file-word-o"></i> 城市更新项目参与总结.docx</div>
+                    <div class="folder-file"><i class="fa fa-file-pdf-o"></i> 乡村建筑调研报告.pdf</div>
+                    <div class="back-to-folders"><i class="fa fa-arrow-left"></i> 返回文件夹</div>
+                </div>
+            </div>
+            
+            <!-- 获奖证书 -->
+            <div class="folder" data-folder="awards">
+                <div class="folder-icon"><i class="fa fa-folder-open"></i></div>
+                <div class="folder-name">获奖证书</div>
+                <p class="text-sm text-gray-300">设计竞赛与学业奖励</p>
+                <div class="folder-count">2 个文件</div>
+                
+                <div class="folder-content">
+                    <div class="folder-file"><i class="fa fa-file-image-o"></i> 全国大学生建筑设计竞赛二等奖.jpg</div>
+                    <div class="folder-file"><i class="fa fa-file-image-o"></i> 2022年度学院优秀设计奖.jpg</div>
+                    <div class="back-to-folders"><i class="fa fa-arrow-left"></i> 返回文件夹</div>
+                </div>
+            </div>
+            
+            <!-- 个人简历 -->
+            <div class="folder" data-folder="resume">
+                <div class="folder-icon"><i class="fa fa-folder-open"></i></div>
+                <div class="folder-name">个人简历</div>
+                <p class="text-sm text-gray-300">个人介绍与求职资料</p>
+                <div class="folder-count">2 个文件</div>
+                
+                <div class="folder-content">
+                    <div class="folder-file"><i class="fa fa-file-pdf-o"></i> 苏威-建筑设计简历.pdf</div>
+                    <div class="folder-file"><i class="fa fa-file-word-o"></i> 个人陈述.docx</div>
+                    <div class="back-to-folders"><i class="fa fa-arrow-left"></i> 返回文件夹</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 导航栏 -->
+    <nav id="navbar" class="fixed w-full py-6 transition-all duration-300 z-50">
+        <div class="container mx-auto px-6 md:px-12 flex justify-between items-center">
+            <a href="#hero" class="relative" id="logo-link">
+                <div class="logo">
+                    <span class="logo-su">苏</span>
+                    <span class="logo-wei">威</span>
+                    <span class="logo-architecture"></span>
+                    <span class="logo-corner logo-corner-tl"></span>
+                    <span class="logo-corner logo-corner-tr"></span>
+                    <span class="logo-corner logo-corner-bl"></span>
+                    <span class="logo-corner logo-corner-br"></span>
+                </div>
+            </a>
+            
+            <!-- 桌面导航 -->
+            <div class="hidden md:flex space-x-10">
+                <a href="#about" class="font-medium hover:text-primary transition-custom relative group">
+                    关于我
+                    <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+                </a>
+                <a href="#portfolio" class="font-medium hover:text-primary transition-custom relative group">
+                    作品集
+                    <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+                </a>
+                <a href="#process" class="font-medium hover:text-primary transition-custom relative group">
+                    设计过程
+                    <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+                </a>
+                <a href="#skills" class="font-medium hover:text-primary transition-custom relative group">
+                    专业技能
+                    <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+                </a>
+                <a href="#experience" class="font-medium hover:text-primary transition-custom relative group">
+                    实践经历
+                    <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+                </a>
+                <a href="#contact" class="font-medium hover:text-primary transition-custom relative group">
+                    联系方式
+                    <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+                </a>
+            </div>
+            
+            <!-- 移动端菜单按钮 -->
+            <button id="menu-toggle" class="md:hidden text-xl text-primary focus:outline-none">
+                <i class="fa fa-bars"></i>
+            </button>
+        </div>
+        
+        <!-- 移动端导航菜单 -->
+        <div id="mobile-menu" class="hidden md:hidden bg-light shadow-lg absolute w-full transform -translate-y-2 opacity-0 transition-all duration-300">
+            <div class="container mx-auto px-6 py-4 flex flex-col space-y-4">
+                <a href="#about" class="font-medium hover:text-primary transition-custom py-2">关于我</a>
+                <a href="#portfolio" class="font-medium hover:text-primary transition-custom py-2">作品集</a>
+                <a href="#process" class="font-medium hover:text-primary transition-custom py-2">设计过程</a>
+                <a href="#skills" class="font-medium hover:text-primary transition-custom py-2">专业技能</a>
+                <a href="#experience" class="font-medium hover:text-primary transition-custom py-2">实践经历</a>
+                <a href="#contact" class="font-medium hover:text-primary transition-custom py-2">联系方式</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 英雄区域 -->
+    <section id="hero" class="min-h-screen flex items-center justify-center pt-16 relative overflow-hidden">
+        <div class="absolute inset-0 z-0">
+            <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/code_assistant/35adfcd345784415992ea3c05161bf96~tplv-a9rns2rl98-image.image?rcl=20251012185432A05EDD4E0E3B0296F661&amp;rk3s=8e244e95&amp;rrcfp=e75484ac&amp;x-expires=1760871272&amp;x-signature=rjAmmEC6rTGROaCx0C9MBEHUEE0%3D" alt="建筑背景" class="w-full h-full object-cover opacity-15">
+            <div class="absolute inset-0 bg-gradient-to-b from-light/70 to-light"></div>
+        </div>
+        <div class="container mx-auto px-6 md:px-12 py-16 relative z-10">
+            <div class="flex flex-col md:flex-row items-center gap-12">
+                <div class="md:w-1/2 text-center md:text-left animate-fade-in-up">
+                    <h1 class="text-[clamp(2.5rem,5vw,4rem)] font-playfair font-bold leading-tight text-shadow mb-6">
+                        探索建筑与空间的<br><span class="text-primary">无限可能</span>
+                    </h1>
+                    <p class="text-[clamp(1rem,2vw,1.25rem)] text-gray-700 mb-8 max-w-lg mx-auto md:mx-0 leading-relaxed">
+                        我是苏威，一名充满热情的建筑学专业学生，专注于将创意理念转化为实体空间，探索建筑与人文、环境的和谐共存。
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+                        <a href="#portfolio" class="bg-primary hover:bg-primary/90 text-white font-medium py-3 px-8 rounded-sm transition-custom shadow-md hover:shadow-lg">查看作品集</a>
+                        <a href="#contact" class="bg-transparent hover:bg-white/80 text-dark font-medium py-3 px-8 rounded-sm transition-custom shadow-sm hover:shadow-md border border-primary">联系我</a>
+                    </div>
+                </div>
+                <div class="md:w-1/2 flex justify-center animate-fade-in-up delay-200">
+                    <div class="relative">
+                        <div class="absolute -inset-4 border-2 border-secondary/30 rounded-sm rotate-3"></div>
+                        <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/code_assistant/b9c9fe2568e143229df93825cf6f7ebb~tplv-a9rns2rl98-image.image?rcl=20250930144420427CB7A1FCA3F2290D35&amp;rk3s=8e244e95&amp;rrcfp=e75484ac&amp;x-expires=1759819460&amp;x-signature=WqNlaeDmCyMwa8lvkk8YWr6CiTU%3D" alt="苏威的个人照片" class="w-64 md:w-80 rounded-sm shadow-xl relative z-10 border-4 border-white">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 向下滚动指示器 -->
+            <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
+                <a href="#about" class="text-primary/70 hover:text-primary transition-custom">
+                    <i class="fa fa-chevron-down text-2xl"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 关于我 -->
+    <section id="about" class="py-24 bg-white">
+        <div class="container mx-auto px-6 md:px-12">
+            <div class="text-center mb-16 reveal-element">
+                <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-playfair font-bold mb-4">关于我</h2>
+                <div class="architectural-divider w-40 mx-auto mb-6"></div>
+            </div>
+            
+            <div class="flex flex-col lg:flex-row gap-12 items-center">
+                <div class="lg:w-2/5 reveal-element delay-100">
+                    <div class="relative">
+                        <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/code_assistant/0b2ada03d4944e4cb8b83388908f3a48~tplv-a9rns2rl98-image.image?rcl=2025101218162028B0E58C13E120A1D85B&amp;rk3s=8e244e95&amp;rrcfp=e75484ac&amp;x-expires=1760868981&amp;x-signature=LcBPMWlDVTw08o0g7PZCOkW%2FPmY%3D" alt="建筑设计工作照" class="rounded-sm shadow-lg w-full h-auto">
+                        <div class="absolute -bottom-6 -right-6 bg-light p-4 rounded-sm shadow-lg border border-secondary/20 max-w-xs">
+                            <p class="text-sm italic text-gray-700">"建筑是凝固的音乐，是石头的史诗。"</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="lg:w-3/5 reveal-element delay-200">
+                    <h3 class="text-2xl font-playfair font-semibold mb-6">建筑设计专业四年级学生</h3>
+                    <p class="text-gray-700 mb-6 leading-relaxed">
+                        我就读于国内顶尖建筑学院，目前处于四年级学习阶段。对我而言，建筑不仅仅是功能性的空间，更是人文精神与自然环境的结合点。
+                    </p>
+                    <p class="text-gray-700 mb-8 leading-relaxed">
+                        我的设计理念注重可持续发展与地域文化的融合，追求在现代建筑语言中融入传统元素，创造既有时代感又不失温度的空间体验。在校期间，我参与了多个实际项目设计，从社区中心到文化展馆，积累了丰富的设计经验。
+                    </p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                        <div class="flex items-start p-3 hover:bg-light rounded-sm transition-custom">
+                            <i class="fa fa-graduation-cap text-primary text-xl mt-1 mr-4"></i>
+                            <div>
+                                <h4 class="font-medium mb-1">教育背景</h4>
+                                <p class="text-gray-600">建筑设计专业 本科在读</p>
+                                <p class="text-gray-500 text-sm">2022 - 2026 (预计)</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start p-3 hover:bg-light rounded-sm transition-custom">
+                            <i class="fa fa-pencil text-primary text-xl mt-1 mr-4"></i>
+                            <div>
+                                <h4 class="font-medium mb-1">设计专长</h4>
+                                <p class="text-gray-600">可持续建筑设计、文化类建筑</p>
+                                <p class="text-gray-500 text-sm">公共空间与景观设计</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start p-3 hover:bg-light rounded-sm transition-custom">
+                            <i class="fa fa-trophy text-primary text-xl mt-1 mr-4"></i>
+                            <div>
+                                <h4 class="font-medium mb-1">获奖经历</h4>
+                                <p class="text-gray-600">全国大学生建筑设计竞赛二等奖</p>
+                                <p class="text-gray-500 text-sm">2022年度学院优秀设计奖</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start p-3 hover:bg-light rounded-sm transition-custom">
+                            <i class="fa fa-globe text-primary text-xl mt-1 mr-4"></i>
+                            <div>
+                                <h4 class="font-medium mb-1">交流经历</h4>
+                                <p class="text-gray-600">意大利米兰理工大学短期交流</p>
+                                <p class="text-gray-500 text-sm">2023年夏季</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <a href="#portfolio" class="inline-block border border-primary text-primary hover:bg-primary hover:text-white font-medium py-3 px-8 rounded-sm transition-custom">浏览我的设计作品</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 作品集 -->
+    <section id="portfolio" class="py-24 bg-light">
+        <div class="container mx-auto px-6 md:px-12">
+            <div class="text-center mb-16 reveal-element">
+                <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-playfair font-bold mb-4">设计作品集</h2>
+                <div class="architectural-divider w-40 mx-auto mb-6"></div>
+                <p class="text-gray-600 max-w-2xl mx-auto">
+                    以下是我在学习期间完成的部分设计作品，涵盖了不同类型的建筑项目和设计阶段。点击图片可查看大图。
+                </p>
+            </div>
+            
+            <!-- 作品分类筛选 -->
+            <div class="flex flex-wrap justify-center gap-4 mb-12 reveal-element delay-100">
+                <button class="filter-btn active bg-primary text-white px-6 py-2 rounded-sm transition-custom shadow-md" data-filter="all">全部作品</button>
+                <button class="filter-btn bg-white text-dark hover:bg-primary hover:text-white px-6 py-2 rounded-sm transition-custom shadow-sm" data-filter="cultural">大一作业</button>
+                <button class="filter-btn bg-white text-dark hover:bg-primary hover:text-white px-6 py-2 rounded-sm transition-custom shadow-sm" data-filter="residential">大二作业</button>
+                <button class="filter-btn bg-white text-dark hover:bg-primary hover:text-white px-6 py-2 rounded-sm transition-custom shadow-sm" data-filter="public">大三作业</button>
+                <button class="filter-btn bg-white text-dark hover:bg-primary hover:text-white px-6 py-2 rounded-sm transition-custom shadow-sm" data-filter="urban">大四作业</button>
+            </div>
+            
+            <!-- 作品网格 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- 作品1 -->
+                <div class="project-card group rounded-sm shadow-md overflow-hidden reveal-element delay-100" data-category="cultural" data-caption="乡村文化中心设计 - 将传统村落元素与现代功能结合">
+                    <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/code_assistant/044c1c5895ab4ff5be429491f1b926bf~tplv-a9rns2rl98-image.image?rcl=202510102130274A5801DB08ACAA225AE3&amp;rk3s=8e244e95&amp;rrcfp=e75484ac&amp;x-expires=1760707827&amp;x-signature=Yj1xbMLiwXJS50Y%2Bx5b%2BjegE5Uo%3D" alt="乡村文化中心设计" class="w-full h-80 object-cover">
+                    <div class="project-overlay">
+                        <span class="text-secondary text-sm">文化建筑</span>
+                        <h3 class="text-xl font-medium mt-1 mb-2">乡村文化中心设计</h3>
+                        <p class="text-sm text-gray-200">将传统村落元素与现代功能结合，创造乡村公共活动空间</p>
+                        <a href="#" class="inline-block mt-4 text-white border-b border-secondary transition-custom hover:border-white">查看详情</a>
+                    </div>
+                </div>
+                
+                <!-- 作品2 -->
+                <div class="project-card group rounded-sm shadow-md overflow-hidden reveal-element delay-200" data-category="residential" data-caption="山地住宅设计 - 依山而建的可持续住宅">
+                    <img src="https://p9-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/code_assistant/57a59d77beb64d0199baf79178106c9c~tplv-a9rns2rl98-image.image?rcl=2025101217160111543AC4088CD8611D30&amp;rk3s=8e244e95&amp;rrcfp=e75484ac&amp;x-expires=1760865363&amp;x-signature=BqaFSx4T%2FD4wUwdUTaTs7MIL28k%3D" alt="山地住宅设计" class="w-full h-80 object-cover">
+                    <div class="project-overlay">
+                        <span class="text-secondary text-sm">居住空间</span>
+                        <h3 class="text-xl font-medium mt-1 mb-2">山地住宅设计</h3>
+                        <p class="text-sm text-gray-200">依山而建的可持续住宅，最大化自然采光与景观视野</p>
+                        <a href="#" class="inline-block mt-4 text-white border-b border-secondary transition-custom hover:border-white">查看详情</a>
+                    </div>
+                </div>
+                
+                <!-- 作品3 -->
+                <div class="project-card group rounded-sm shadow-md overflow-hidden reveal-element delay-300" data-category="public" data-caption="社区图书馆设计 - 以'知识森林'为概念的社区图书馆">
+                    <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/code_assistant/a55564e7ef244cdcb8eff2228632c2c7~tplv-a9rns2rl98-image.image?rcl=20251012172551DE37388EF611C24846E9&amp;rk3s=8e244e95&amp;rrcfp=e75484ac&amp;x-expires=1760865953&amp;x-signature=5bJRmALDPMH0JABjCa8Liy6FbDQ%3D" alt="社区图书馆设计" class="w-full h-80 object-cover">
+                    <div class="project-overlay">
+                        <span class="text-secondary text-sm">公共设施</span>
+                        <h3 class="text-xl font-medium mt-1 mb-2">社区图书馆设计</h3>
+                        <p class="text-sm text-gray-200">以"知识森林"为概念的社区图书馆，促进邻里交流</p>
+                        <a href="#" class="inline-block mt-4 text-white border-b border-secondary transition-custom hover:border-white">查看详情</a>
+                    </div>
+                </div>
+                
+                <!-- 作品4 -->
+                <div class="project-card group rounded-sm shadow-md overflow-hidden reveal-element delay-100" data-category="urban" data-caption="旧工业区改造规划 - 将废弃工厂改造为创意产业园区">
+                    <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/code_assistant/b8785546c2464dc99b945cdb41180983~tplv-a9rns2rl98-image.image?rcl=2025101218143833F523E5A6B92A6567D5&amp;rk3s=8e244e95&amp;rrcfp=e75484ac&amp;x-expires=1760868879&amp;x-signature=Nogo0QM3PVAP52TEMXEFCKfmGJ8%3D" alt="旧工业区改造规划" class="w-full h-80 object-cover">
+                    <div class="project-overlay">
+                        <span class="text-secondary text-sm">城市设计</span>
+                        <h3 class="text-xl font-medium mt-1 mb-2">旧工业区改造规划</h3>
+                        <p class="text-sm text-gray-200">将废弃工厂改造为创意产业园区，保留工业遗产</p>
+                        <a href="#" class="inline-block mt-4 text-white border-b border-secondary transition-custom hover:border-white">查看详情</a>
+                    </div>
+                </div>
+                
+                <!-- 作品5 -->
+                <div class="project-card group rounded-sm shadow-md overflow-hidden reveal-element delay-200" data-category="cultural" data-caption="民俗博物馆设计 - 展示地域文化遗产的博物馆">
+                    <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/code_assistant/f395c5b1b453484e805d72df1fea1c84~tplv-a9rns2rl98-image.image?rcl=2025101218144533F523E5A6B92A656C66&amp;rk3s=8e244e95&amp;rrcfp=e75484ac&amp;x-expires=1760868886&amp;x-signature=W%2FsSMT8BKg8zWwijXuV9XLqE43k%3D" alt="民俗博物馆设计" class="w-full h-80 object-cover">
+                    <div class="project-overlay">
+                        <span class="text-secondary text-sm">文化建筑</span>
+                        <h3 class="text-xl font-medium mt-1 mb-2">民俗博物馆设计</h3>
+                        <p class="text-sm text-gray-200">以当地传统建筑形式为灵感，展示地域文化遗产</p>
+                        <a href="#" class="inline-block mt-4 text-white border-b border-secondary transition-custom hover:border-white">查看详情</a>
+                    </div>
+                </div>
+                
+                <!-- 作品6 -->
+                <div class="project-card group rounded-sm shadow-md overflow-hidden reveal-element delay-300" data-category="public" data-caption="城市口袋公园设计 - 利用城市剩余空间打造的微型公园">
+                    <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/code_assistant/a30c69cf726d426bb8ee0b68f3b7797c~tplv-a9rns2rl98-image.image?rcl=202510121815437E4D1D44BB5C7EAE79A9&amp;rk3s=8e244e95&amp;rrcfp=e75484ac&amp;x-expires=1760868945&amp;x-signature=ZOY8maQKVknAZROt28YhcbFZFr0%3D" alt="城市口袋公园设计" class="w-full h-80 object-cover">
+                    <div class="project-overlay">
+                        <span class="text-secondary text-sm">公共设施</span>
+                        <h3 class="text-xl font-medium mt-1 mb-2">城市口袋公园设计</h3>
+                        <p class="text-sm text-gray-200">利用城市剩余空间打造的微型公园，提供休憩场所</p>
+                        <a href="#" class="inline-block mt-4 text-white border-b border-secondary transition-custom hover:border-white">查看详情</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-16 reveal-element delay-100">
+                <!-- 修改为跳转到新页面的链接 -->
+                <a href="more-works.html" class="inline-block border-2 border-primary text-primary hover:bg-primary hover:text-white font-medium py-3 px-8 rounded-sm transition-custom shadow-sm hover:shadow-md">查看更多作品</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 图片放大模态框 -->
+    <div id="image-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">×</span>
+            <img id="modal-image" class="modal-image" src="" alt="大图预览">
+            <div class="modal-caption" id="modal-caption"></div>
+        </div>
+    </div>
+
+    <!-- 设计过程展示 -->
+    <section id="process" class="py-24 bg-white">
+        <div class="container mx-auto px-6 md:px-12">
+            <div class="text-center mb-16 reveal-element">
+                <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-playfair font-bold mb-4">设计过程</h2>
+                <div class="architectural-divider w-40 mx-auto mb-6"></div>
+                <p class="text-gray-600 max-w-2xl mx-auto">
+                    建筑设计是一个从概念到实现的渐进过程，每个阶段都有其独特的思考与探索。
+                </p>
+            </div>
+            
+            <div class="flex flex-col lg:flex-row gap-12 items-center">
+                <div class="lg:w-1/2 reveal-element delay-100">
+                    <div class="relative">
+                        <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/code_assistant/87587d5ecb704714a44c37059f01519a~tplv-a9rns2rl98-image.image?rcl=202510130018511F0F9AAD4408B4608A42&amp;rk3s=8e244e95&amp;rrcfp=e75484ac&amp;x-expires=1760890732&amp;x-signature=CjezdhKg89y7BECtpcxdabqlQP8%3D" alt="乡村文化中心设计过程" class="w-full h-auto rounded-sm shadow-lg">
+                        <div class="absolute -top-4 -left-4 bg-primary text-white px-4 py-2 rounded-sm shadow-md">
+                            <span class="font-medium">从主干到枝繁叶茂</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="lg:w-1/2 reveal-element delay-200">
+                    <div class="relative pl-12">
+                        <!-- 时间线 -->
+                        <div class="timeline-line"></div>
+                        
+                        <div class="space-y-10">
+                            <div class="relative">
+                                <div class="absolute -left-16 top-0 w-12 h-12 bg-primary text-white rounded-full flex items-center justify-center font-bold shadow-md">01</div>
+                                <h3 class="text-xl font-medium mb-2">场地分析与概念构思</h3>
+                                <p class="text-gray-600">对场地环境、气候条件、周边文脉进行深入分析，提出"扎根乡土，面向未来"的设计概念。通过实地调研，记录场地特征与当地文化元素。</p>
+                            </div>
+                            
+                            <div class="relative">
+                                <div class="absolute -left-16 top-0 w-12 h-12 bg-primary text-white rounded-full flex items-center justify-center font-bold shadow-md">02</div>
+                                <h3 class="text-xl font-medium mb-2">方案设计与草图</h3>
+                                <p class="text-gray-600">通过大量草图探索空间形态，结合当地传统建筑元素，形成初步方案构思。进行多方案比较，优化功能布局与空间组织。</p>
+                            </div>
+                            
+                            <div class="relative">
+                                <div class="absolute -left-16 top-0 w-12 h-12 bg-primary text-white rounded-full flex items-center justify-center font-bold shadow-md">03</div>
+                                <h3 class="text-xl font-medium mb-2">模型制作与空间研究</h3>
+                                <p class="text-gray-600">制作实体模型和数字模型，研究空间关系、光影效果和流线组织。通过模型推敲建筑与环境的关系，优化建筑形态。</p>
+                            </div>
+                            
+                            <div class="relative">
+                                <div class="absolute -left-16 top-0 w-12 h-12 bg-primary text-white rounded-full flex items-center justify-center font-bold shadow-md">04</div>
+                                <h3 class="text-xl font-medium mb-2">深化设计与细节推敲</h3>
+                                <p class="text-gray-600">完善平面布局，推敲立面设计，选择适宜的材料，考虑可持续性技术应用。制作详细施工图和效果图，完成最终设计成果。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 专业技能 -->
+    <section id="skills" class="py-24 bg-light">
+        <div class="container mx-auto px-6 md:px-12">
+            <div class="text-center mb-16 reveal-element">
+                <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-playfair font-bold mb-4">专业技能</h2>
+                <div class="architectural-divider w-40 mx-auto mb-6"></div>
+                <p class="text-gray-600 max-w-2xl mx-auto">
+                    掌握建筑设计所需的专业知识与技能，能够完成从概念设计到施工图的全过程工作。
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <div class="reveal-element delay-100">
+                    <h3 class="text-xl font-playfair font-semibold mb-6 pb-2 border-b border-secondary/30">设计软件</h3>
+                    
+                    <div class="space-y-6">
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="font-medium">AutoCAD</span>
+                                <span>100%</span>
+                            </div>
+                            <div class="h-2 bg-gray-200 rounded-sm overflow-hidden">
+                                <div class="skill-bar h-full bg-primary" data-width="100%"></div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="font-medium">SketchUp</span>
+                                <span>100%</span>
+                            </div>
+                            <div class="h-2 bg-gray-200 rounded-sm overflow-hidden">
+                                <div class="skill-bar h-full bg-primary" data-width="100%"></div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="font-medium">Rhino &amp; Grasshopper</span>
+                                <span>100%</span>
+                            </div>
+                            <div class="h-2 bg-gray-200 rounded-sm overflow-hidden">
+                                <div class="skill-bar h-full bg-primary" data-width="100%"></div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="font-medium">Revit</span>
+                                <span>100%</span>
+                            </div>
+                            <div class="h-2 bg-gray-200 rounded-sm overflow-hidden">
+                                <div class="skill-bar h-full bg-primary" data-width="100%"></div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="font-medium">Adobe Creative Suite</span>
+                                <span>100%</span>
+                            </div>
+                            <div class="h-2 bg-gray-200 rounded-sm overflow-hidden">
+                                <div class="skill-bar h-full bg-primary" data-width="100%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="reveal-element delay-200">
+                    <h3 class="text-xl font-playfair font-semibold mb-6 pb-2 border-b border-secondary/30">专业能力</h3>
+                    
+                    <div class="space-y-6">
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="font-medium">方案设计与创意</span>
+                                <span>100%</span>
+                            </div>
+                            <div class="h-2 bg-gray-200 rounded-sm overflow-hidden">
+                                <div class="skill-bar h-full bg-primary" data-width="100%"></div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="font-medium">手绘表现</span>
+                                <span>100%</span>
+                            </div>
+                            <div class="h-2 bg-gray-200 rounded-sm overflow-hidden">
+                                <div class="skill-bar h-full bg-primary" data-width="100%"></div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="font-medium">模型制作</span>
+                                <span>100%</span>
+                            </div>
+                            <div class="h-2 bg-gray-200 rounded-sm overflow-hidden">
+                                <div class="skill-bar h-full bg-primary" data-width="100%"></div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="font-medium">建筑物理与技术</span>
+                                <span>100%</span>
+                            </div>
+                            <div class="h-2 bg-gray-200 rounded-sm overflow-hidden">
+                                <div class="skill-bar h-full bg-primary" data-width="100%"></div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="font-medium">施工图设计</span>
+                                <span>100%</span>
+                            </div>
+                            <div class="h-2 bg-gray-200 rounded-sm overflow-hidden">
+                                <div class="skill-bar h-full bg-primary" data-width="100%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div class="bg-white p-6 rounded-sm shadow-md text-center hover:shadow-lg transition-custom reveal-element delay-100 hover:card-hover">
+                    <i class="fa fa-paint-brush text-4xl text-primary mb-4"></i>
+                    <h4 class="font-medium mb-2">方案创意</h4>
+                    <p class="text-gray-600 text-sm">将概念转化为创新设计</p>
+                </div>
+                
+                <div class="bg-white p-6 rounded-sm shadow-md text-center hover:shadow-lg transition-custom reveal-element delay-200 hover:card-hover">
+                    <i class="fa fa-cubes text-4xl text-primary mb-4"></i>
+                    <h4 class="font-medium mb-2">3D建模</h4>
+                    <p class="text-gray-600 text-sm">精确构建数字建筑模型</p>
+                </div>
+                
+                <div class="bg-white p-6 rounded-sm shadow-md text-center hover:shadow-lg transition-custom reveal-element delay-300 hover:card-hover">
+                    <i class="fa fa-camera text-4xl text-primary mb-4"></i>
+                    <h4 class="font-medium mb-2">效果图表现</h4>
+                    <p class="text-gray-600 text-sm">呈现真实的空间感受</p>
+                </div>
+                
+                <div class="bg-white p-6 rounded-sm shadow-md text-center hover:shadow-lg transition-custom reveal-element delay-400 hover:card-hover">
+                    <i class="fa fa-hand-paper-o text-4xl text-primary mb-4"></i>
+                    <h4 class="font-medium mb-2">模型制作</h4>
+                    <p class="text-gray-600 text-sm">手工与数字模型制作</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 实践经历 -->
+    <section id="experience" class="py-24 bg-white">
+        <div class="container mx-auto px-6 md:px-12">
+            <div class="text-center mb-16 reveal-element">
+                <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-playfair font-bold mb-4">实践经历</h2>
+                <div class="architectural-divider w-40 mx-auto mb-6"></div>
+                <p class="text-gray-600 max-w-2xl mx-auto">
+                    通过实习和实际项目参与，将理论知识应用于实践，积累专业经验。
+                </p>
+            </div>
+            
+            <div class="relative">
+                <!-- 时间线 -->
+                <div class="absolute left-0 md:left-1/2 top-0 bottom-0 w-px bg-secondary/30 transform md:translate-x-px"></div>
+                
+                <!-- 经历1 -->
+                <div class="relative mb-12 md:mb-24 reveal-element delay-100">
+                    <div class="flex flex-col md:flex-row items-center">
+                        <div class="md:w-1/2 md:pr-12 md:text-right order-2 md:order-1 mt-6 md:mt-0">
+                            <span class="text-sm text-gray-500">2023年7月 - 2023年9月</span>
+                            <h3 class="text-xl font-medium mt-1 mb-2">建筑设计实习生</h3>
+                            <p class="text-primary font-medium mb-3">华筑建筑设计事务所</p>
+                            <p class="text-gray-600">参与城市更新项目设计，负责前期场地调研、方案草图绘制和模型制作，协助完成概念设计阶段成果汇报。</p>
+                        </div>
+                        
+                        <div class="flex items-center justify-center w-12 h-12 rounded-full bg-primary text-white z-10 order-1 md:order-2 shadow-md">
+                            <i class="fa fa-building"></i>
+                        </div>
+                        
+                        <div class="md:w-1/2 md:pl-12 hidden md:block order-3"></div>
+                    </div>
+                </div>
+                
+                <!-- 经历2 -->
+                <div class="relative mb-12 md:mb-24 reveal-element delay-200">
+                    <div class="flex flex-col md:flex-row items-center">
+                        <div class="md:w-1/2 md:pr-12 hidden md:block order-1"></div>
+                        
+                        <div class="flex items-center justify-center w-12 h-12 rounded-full bg-primary text-white z-10 order-2 shadow-md">
+                            <i class="fa fa-university"></i>
+                        </div>
+                        
+                        <div class="md:w-1/2 md:pl-12 order-3 mt-6 md:mt-0">
+                            <span class="text-sm text-gray-500">2022年9月 - 2023年1月</span>
+                            <h3 class="text-xl font-medium mt-1 mb-2">教学助理</h3>
+                            <p class="text-primary font-medium mb-3">建筑学院设计基础教研室</p>
+                            <p class="text-gray-600">协助教授指导一年级学生设计基础课程，负责评图、模型制作指导和软件教学，帮助学生掌握基本设计方法。</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 经历3 -->
+                <div class="relative reveal-element delay-300">
+                    <div class="flex flex-col md:flex-row items-center">
+                        <div class="md:w-1/2 md:pr-12 md:text-right order-2 md:order-1 mt-6 md:mt-0">
+                            <span class="text-sm text-gray-500">2022年3月 - 2022年6月</span>
+                            <h3 class="text-xl font-medium mt-1 mb-2">乡村建筑调研团队成员</h3>
+                            <p class="text-primary font-medium mb-3">学院乡村建筑研究中心</p>
+                            <p class="text-gray-600">参与传统村落保护与更新研究项目，负责实地调研、建筑测绘和数据整理，协助完成调研报告和保护规划建议。</p>
+                        </div>
+                        
+                        <div class="flex items-center justify-center w-12 h-12 rounded-full bg-primary text-white z-10 order-1 md:order-2 shadow-md">
+                            <i class="fa fa-home"></i>
+                        </div>
+                        
+                        <div class="md:w-1/2 md:pl-12 hidden md:block order-3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 联系方式 -->
+    <section id="contact" class="py-24 bg-light">
+        <div class="container mx-auto px-6 md:px-12">
+            <div class="text-center mb-16 reveal-element">
+                <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-playfair font-bold mb-4">联系我</h2>
+                <div class="architectural-divider w-40 mx-auto mb-6"></div>
+                <p class="text-gray-600 max-w-2xl mx-auto">
+                    无论您是想讨论合作、项目机会，还是对我的作品有任何疑问，都欢迎与我联系。
+                </p>
+            </div>
+            
+            <div class="flex flex-col lg:flex-row gap-12">
+                <div class="lg:w-1/3 reveal-element delay-100">
+                    <div class="bg-white p-8 rounded-sm shadow-lg h-full hover:shadow-xl transition-custom">
+                        <h3 class="text-xl font-playfair font-semibold mb-6">联系方式</h3>
+                        
+                        <div class="space-y-6">
+                            <div class="flex items-start p-3 hover:bg-light rounded-sm transition-custom">
+                                <div class="bg-secondary/20 p-3 rounded-sm mr-4">
+                                    <i class="fa fa-map-marker text-primary"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium mb-1">地址</h4>
+                                    <p class="text-gray-600">石家庄铁道大学</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start p-3 hover:bg-light rounded-sm transition-custom">
+                                <div class="bg-secondary/20 p-3 rounded-sm mr-4">
+                                    <i class="fa fa-envelope text-primary"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium mb-1">邮箱</h4>
+                                    <p class="text-gray-600">2068294905@qq.com</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start p-3 hover:bg-light rounded-sm transition-custom">
+                                <div class="bg-secondary/20 p-3 rounded-sm mr-4">
+                                    <i class="fa fa-phone text-primary"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium mb-1">电话</h4>
+                                    <p class="text-gray-600">17749851186</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-8">
+                            <h4 class="font-medium mb-4">作品集</h4>
+                            <div class="flex space-x-4">
+                                <a href="#" class="bg-secondary/20 hover:bg-primary hover:text-white w-10 h-10 rounded-sm flex items-center justify-center transition-custom">
+                                    <i class="fa fa-behance"></i>
+                                </a>
+                                <a href="#" class="bg-secondary/20 hover:bg-primary hover:text-white w-10 h-10 rounded-sm flex items-center justify-center transition-custom">
+                                    <i class="fa fa-instagram"></i>
+                                </a>
+                                <a href="#" class="bg-secondary/20 hover:bg-primary hover:text-white w-10 h-10 rounded-sm flex items-center justify-center transition-custom">
+                                    <i class="fa fa-linkedin"></i>
+                                </a>
+                                <a href="#" class="bg-secondary/20 hover:bg-primary hover:text-white w-10 h-10 rounded-sm flex items-center justify-center transition-custom">
+                                    <i class="fa fa-pinterest"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="lg:w-2/3 reveal-element delay-200">
+                    <div class="bg-white p-8 rounded-sm shadow-lg hover:shadow-xl transition-custom">
+                        <h3 class="text-xl font-playfair font-semibold mb-6">发送消息</h3>
+                        
+                        <form id="contact-form">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                                <div>
+                                    <label for="name" class="block text-gray-700 font-medium mb-2">姓名</label>
+                                    <input type="text" id="name" name="name" class="w-full px-4 py-3 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-custom" placeholder="请输入您的姓名">
+                                </div>
+                                
+                                <div>
+                                    <label for="email" class="block text-gray-700 font-medium mb-2">邮箱</label>
+                                    <input type="email" id="email" name="email" class="w-full px-4 py-3 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-custom" placeholder="请输入您的邮箱">
+                                </div>
+                            </div>
+                            
+                            <div class="mb-6">
+                                <label for="subject" class="block text-gray-700 font-medium mb-2">主题</label>
+                                <input type="text" id="subject" name="subject" class="w-full px-4 py-3 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-custom" placeholder="请输入消息主题">
+                            </div>
+                            
+                            <div class="mb-6">
+                                <label for="message" class="block text-gray-700 font-medium mb-2">消息</label>
+                                <textarea id="message" name="message" rows="5" class="w-full px-4 py-3 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-custom" placeholder="请输入您的消息内容"></textarea>
+                            </div>
+                            
+                            <button type="submit" class="bg-primary hover:bg-primary/90 text-white font-medium py-3 px-8 rounded-sm transition-custom shadow-md hover:shadow-lg">发送消息</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="bg-dark text-white py-12">
+        <div class="container mx-auto px-6 md:px-12">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-6 md:mb-0">
+                    <div class="logo">
+                        <span class="logo-su">苏</span>
+                        <span class="logo-wei">威</span>
+                        <span class="logo-architecture"></span>
+                        <span class="logo-corner logo-corner-tl"></span>
+                        <span class="logo-corner logo-corner-tr"></span>
+                        <span class="logo-corner logo-corner-bl"></span>
+                        <span class="logo-corner logo-corner-br"></span>
+                    </div>
+                    <p class="text-gray-400 mt-2">建筑学学生 | 设计爱好者</p>
+                </div>
+                
+                <div class="flex flex-wrap justify-center space-x-6 mb-6 md:mb-0">
+                    <a href="#about" class="text-gray-400 hover:text-white transition-custom">关于我</a>
+                    <a href="#portfolio" class="text-gray-400 hover:text-white transition-custom">作品集</a>
+                    <a href="#process" class="text-gray-400 hover:text-white transition-custom">设计过程</a>
+                    <a href="#skills" class="text-gray-400 hover:text-white transition-custom">专业技能</a>
+                    <a href="#experience" class="text-gray-400 hover:text-white transition-custom">实践经历</a>
+                    <a href="#contact" class="text-gray-400 hover:text-white transition-custom">联系方式</a>
+                </div>
+                
+                <div class="flex space-x-4">
+                    <a href="#" class="text-gray-400 hover:text-white transition-custom">
+                        <i class="fa fa-behance text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-custom">
+                        <i class="fa fa-instagram text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-custom">
+                        <i class="fa fa-linkedin text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-custom">
+                        <i class="fa fa-pinterest text-xl"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-500">
+                <p>© 2025 苏威的个人作品集. 保留所有权利.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 返回顶部按钮 -->
+    <button id="back-to-top" class="fixed bottom-8 right-8 bg-primary text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg opacity-0 invisible transition-all duration-300 z-50">
+        <i class="fa fa-arrow-up"></i>
+    </button>
+
+    <!-- JavaScript -->
+    <script>
+        // 页面加载完成后执行
+        document.addEventListener('DOMContentLoaded', function() {
+            // 导航栏滚动效果
+            const navbar = document.getElementById('navbar');
+            const backToTop = document.getElementById('back-to-top');
+            
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 50) {
+                    navbar.classList.add('nav-scrolled');
+                    backToTop.classList.remove('opacity-0', 'invisible');
+                    backToTop.classList.add('opacity-100', 'visible');
+                } else {
+                    navbar.classList.remove('nav-scrolled');
+                    backToTop.classList.add('opacity-0', 'invisible');
+                    backToTop.classList.remove('opacity-100', 'visible');
+                }
+                
+                // 检测元素是否在视口中，添加动画
+                checkRevealElements();
+                animateSkillBars();
+            });
+            
+            // 移动端菜单切换
+            const menuToggle = document.getElementById('menu-toggle');
+            const mobileMenu = document.getElementById('mobile-menu');
+            let menuOpen = false;
+            
+            menuToggle.addEventListener('click', function() {
+                menuOpen = !menuOpen;
+                if (menuOpen) {
+                    mobileMenu.classList.remove('hidden', '-translate-y-2', 'opacity-0');
+                    mobileMenu.classList.add('translate-y-0', 'opacity-100');
+                    menuToggle.innerHTML = '<i class="fa fa-times"></i>';
+                } else {
+                    mobileMenu.classList.add('-translate-y-2', 'opacity-0');
+                    mobileMenu.classList.remove('translate-y-0', 'opacity-100');
+                    setTimeout(() => {
+                        mobileMenu.classList.add('hidden');
+                    }, 300);
+                    menuToggle.innerHTML = '<i class="fa fa-bars"></i>';
+                }
+            });
+            
+            // 关闭移动端菜单（点击菜单项后）
+            const mobileLinks = mobileMenu.querySelectorAll('a');
+            mobileLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    menuOpen = false;
+                    mobileMenu.classList.add('-translate-y-2', 'opacity-0');
+                    mobileMenu.classList.remove('translate-y-0', 'opacity-100');
+                    setTimeout(() => {
+                        mobileMenu.classList.add('hidden');
+                    }, 300);
+                    menuToggle.innerHTML = '<i class="fa fa-bars"></i>';
+                });
+            });
+            
+            // 作品筛选功能
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            const projectCards = document.querySelectorAll('.project-card');
+            
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // 移除所有按钮的active类
+                    filterBtns.forEach(b => {
+                        b.classList.remove('active', 'bg-primary', 'text-white', 'shadow-md');
+                        b.classList.add('bg-white', 'text-dark', 'hover:bg-primary', 'hover:text-white', 'shadow-sm');
+                    });
+                    
+                    // 给当前点击的按钮添加active类
+                    this.classList.add('active', 'bg-primary', 'text-white', 'shadow-md');
+                    this.classList.remove('bg-white', 'text-dark', 'hover:bg-primary', 'hover:text-white', 'shadow-sm');
+                    
+                    const filter = this.getAttribute('data-filter');
+                    
+                    // 筛选作品
+                    projectCards.forEach(card => {
+                        if (filter === 'all' || card.getAttribute('data-category') === filter) {
+                            card.style.display = 'block';
+                            // 添加动画效果
+                            setTimeout(() => {
+                                card.style.opacity = '1';
+                                card.style.transform = 'scale(1)';
+                            }, 50);
+                        } else {
+                            card.style.opacity = '0';
+                            card.style.transform = 'scale(0.9)';
+                            // 延迟隐藏，让动画完成
+                            setTimeout(() => {
+                                card.style.display = 'none';
+                            }, 300);
+                        }
+                    });
+                });
+            });
+            
+            // 图片放大功能
+            const modal = document.getElementById('image-modal');
+            const modalImg = document.getElementById('modal-image');
+            const modalCaption = document.getElementById('modal-caption');
+            const closeBtn = document.querySelector('.close-modal');
+            
+            // 点击作品卡片打开模态框
+            projectCards.forEach(card => {
+                card.addEventListener('click', function(e) {
+                    // 防止点击"查看详情"链接时触发图片放大
+                    if (e.target.tagName !== 'A') {
+                        const imgSrc = this.querySelector('img').src;
+                        const captionText = this.getAttribute('data-caption');
+                        
+                        modalImg.src = imgSrc;
+                        modalCaption.textContent = captionText;
+                        modal.classList.add('active');
+                        document.body.style.overflow = 'hidden'; // 防止背景滚动
+                    }
+                });
+            });
+            
+            // 点击关闭按钮关闭模态框
+            closeBtn.addEventListener('click', function() {
+                modal.classList.remove('active');
+                document.body.style.overflow = 'auto'; // 恢复滚动
+            });
+            
+            // 点击模态框外部关闭模态框
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    modal.classList.remove('active');
+                    document.body.style.overflow = 'auto'; // 恢复滚动
+                }
+            });
+            
+            // 按ESC键关闭模态框
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && modal.classList.contains('active')) {
+                    modal.classList.remove('active');
+                    document.body.style.overflow = 'auto'; // 恢复滚动
+                }
+            });
+            
+            // 返回顶部功能
+            backToTop.addEventListener('click', function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+            
+            // 表单提交处理
+            const contactForm = document.getElementById('contact-form');
+            
+            contactForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // 这里可以添加表单验证和提交逻辑
+                alert('消息发送成功！我会尽快回复你。');
+                contactForm.reset();
+            });
+            
+            // 文件架功能
+            const logoLink = document.getElementById('logo-link');
+            const fileCabinet = document.getElementById('file-cabinet');
+            const closeCabinet = document.getElementById('close-cabinet');
+            const folders = document.querySelectorAll('.folder');
+            const backButtons = document.querySelectorAll('.back-to-folders');
+            
+            // 点击logo打开文件架
+            logoLink.addEventListener('click', function(e) {
+                e.preventDefault(); // 阻止默认跳转行为
+                fileCabinet.classList.add('active');
+                document.body.style.overflow = 'hidden'; // 防止背景滚动
+            });
+            
+            // 关闭文件架
+            closeCabinet.addEventListener('click', function() {
+                fileCabinet.classList.remove('active');
+                document.body.style.overflow = 'auto'; // 恢复滚动
+                
+                // 重置所有文件夹状态
+                folders.forEach(folder => {
+                    folder.querySelector('.folder-content').style.display = 'none';
+                });
+            });
+            
+            // 点击文件夹打开内容
+            folders.forEach(folder => {
+                folder.addEventListener('click', function(e) {
+                    // 只在点击文件夹名称区域时打开
+                    if (!e.target.closest('.back-to-folders')) {
+                        const content = this.querySelector('.folder-content');
+                        content.style.display = content.style.display === 'block' ? 'none' : 'block';
+                    }
+                });
+            });
+            
+            // 返回文件夹列表
+            backButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.stopPropagation(); // 防止事件冒泡
+                    this.closest('.folder-content').style.display = 'none';
+                });
+            });
+            
+            // 按ESC键关闭文件架
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && fileCabinet.classList.contains('active')) {
+                    fileCabinet.classList.remove('active');
+                    document.body.style.overflow = 'auto'; // 恢复滚动
+                    
+                    // 重置所有文件夹状态
+                    folders.forEach(folder => {
+                        folder.querySelector('.folder-content').style.display = 'none';
+                    });
+                }
+            });
+            
+            // 初始检查元素是否在视口中
+            checkRevealElements();
+            animateSkillBars();
+        });
+        
+        // 检查元素是否在视口中，添加动画
+        function checkRevealElements() {
+            const revealElements = document.querySelectorAll('.reveal-element');
+            
+            revealElements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = 150;
+                
+                if (elementTop < window.innerHeight - elementVisible) {
+                    element.classList.add('animate-fade-in-up');
+                }
+            });
+        }
+        
+        // 技能条动画
+        function animateSkillBars() {
+            const skillBars = document.querySelectorAll('.skill-bar');
+            
+            skillBars.forEach(bar => {
+                const barTop = bar.getBoundingClientRect().top;
+                const barVisible = 150;
+                const width = bar.getAttribute('data-width');
+                
+                if (barTop < window.innerHeight - barVisible && !bar.classList.contains('skill-animate')) {
+                    bar.style.setProperty('--width', width);
+                    bar.classList.add('skill-animate');
+                }
+            });
+        }
+    </script>
+
+
+    </body></html>
